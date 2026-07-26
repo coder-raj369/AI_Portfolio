@@ -145,7 +145,9 @@ def main() -> None:
     payload = {
         "steps": STEPS,
         "lr_grid": sorted(LR_GRID),
-        "quadratic": {k: {kk: vv for kk, vv in v.items() if kk != "curve"} for k, v in quad.items()},
+        "quadratic": {
+            k: {kk: vv for kk, vv in v.items() if kk != "curve"} for k, v in quad.items()
+        },
         "rosenbrock": {
             k: {kk: vv for kk, vv in v.items() if kk != "curve"} for k, v in rosen.items()
         },
