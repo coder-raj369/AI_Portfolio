@@ -1,0 +1,80 @@
+{
+  "setup": "MLP 2-32-32-3 tanh (1251 params), batch=64, steps=1000, identical seed/batch order across optimisers",
+  "lr_grid": [
+    0.001,
+    0.003,
+    0.01,
+    0.03,
+    0.1,
+    0.3
+  ],
+  "per_optimiser_best": {
+    "SGD": {
+      "lr": 0.3,
+      "final_batch_loss": 0.25715807835503324,
+      "train_accuracy": 0.891358024691358,
+      "test_accuracy": 0.8,
+      "steps_to_95pct_train": 720,
+      "seconds": 0.34
+    },
+    "SGD+momentum": {
+      "lr": 0.1,
+      "final_batch_loss": 0.05836298027991899,
+      "train_accuracy": 0.9925925925925926,
+      "test_accuracy": 0.9703703703703703,
+      "steps_to_95pct_train": 320,
+      "seconds": 0.35
+    },
+    "SGD+Nesterov": {
+      "lr": 0.3,
+      "final_batch_loss": 0.027058186211426284,
+      "train_accuracy": 0.9925925925925926,
+      "test_accuracy": 0.9629629629629629,
+      "steps_to_95pct_train": 240,
+      "seconds": 0.37
+    },
+    "Adam": {
+      "lr": 0.03,
+      "final_batch_loss": 0.04965376683239874,
+      "train_accuracy": 0.9851851851851852,
+      "test_accuracy": 0.9481481481481482,
+      "steps_to_95pct_train": 200,
+      "seconds": 0.43
+    },
+    "AdamW(wd=0.01)": {
+      "lr": 0.01,
+      "final_batch_loss": 0.08184784777862046,
+      "train_accuracy": 0.980246913580247,
+      "test_accuracy": 0.9481481481481482,
+      "steps_to_95pct_train": 520,
+      "seconds": 0.46
+    },
+    "Lion": {
+      "lr": 0.01,
+      "final_batch_loss": 0.080900992416894,
+      "train_accuracy": 0.9827160493827161,
+      "test_accuracy": 0.9555555555555556,
+      "steps_to_95pct_train": 240,
+      "seconds": 0.41
+    }
+  },
+  "schedule_ablation": {
+    "optimiser": "SGD+momentum",
+    "constant_lr": {
+      "lr": 0.1,
+      "final_batch_loss": 0.05836298027991899,
+      "train_accuracy": 0.9925925925925926,
+      "test_accuracy": 0.9703703703703703,
+      "steps_to_95pct_train": 320,
+      "seconds": 0.35
+    },
+    "cosine_warmup": {
+      "lr": 0.1,
+      "final_batch_loss": 0.058404871788178256,
+      "train_accuracy": 0.9901234567901235,
+      "test_accuracy": 0.9629629629629629,
+      "steps_to_95pct_train": 360,
+      "seconds": 0.38
+    }
+  }
+}

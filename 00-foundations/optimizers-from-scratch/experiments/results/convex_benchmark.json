@@ -1,0 +1,104 @@
+{
+  "steps": 500,
+  "lr_grid": [
+    0.0001,
+    0.00030000000000000003,
+    0.001,
+    0.003,
+    0.01,
+    0.03,
+    0.1,
+    0.30000000000000004,
+    1.0
+  ],
+  "quadratic": {
+    "SGD": {
+      "best_lr": 0.01,
+      "final_loss": 2.861637116800095e-06,
+      "initial_loss": 525.4456895125298,
+      "steps_to_1e-6_of_initial": 311
+    },
+    "SGD+momentum": {
+      "best_lr": 0.01,
+      "final_loss": 3.764382382555616e-21,
+      "initial_loss": 525.4456895125298,
+      "steps_to_1e-6_of_initial": 123
+    },
+    "SGD+Nesterov": {
+      "best_lr": 0.01,
+      "final_loss": 5.9069449078734926e-27,
+      "initial_loss": 525.4456895125298,
+      "steps_to_1e-6_of_initial": 86
+    },
+    "Adam": {
+      "best_lr": 0.30000000000000004,
+      "final_loss": 7.176477393627298e-21,
+      "initial_loss": 525.4456895125298,
+      "steps_to_1e-6_of_initial": 129
+    },
+    "AdamW(wd=0.01)": {
+      "best_lr": 0.30000000000000004,
+      "final_loss": 1.5804086436202567e-21,
+      "initial_loss": 525.4456895125298,
+      "steps_to_1e-6_of_initial": 123
+    },
+    "Lion": {
+      "best_lr": 0.03,
+      "final_loss": 0.16083305148032187,
+      "initial_loss": 525.4456895125298,
+      "steps_to_1e-6_of_initial": null
+    }
+  },
+  "rosenbrock": {
+    "SGD": {
+      "best_lr": 0.003,
+      "final_loss": 0.08064705827766334,
+      "initial_loss": 24.199999999999996,
+      "steps_to_1e-6_of_initial": null
+    },
+    "SGD+momentum": {
+      "best_lr": 0.003,
+      "final_loss": 2.5767174787087284e-07,
+      "initial_loss": 24.199999999999996,
+      "steps_to_1e-6_of_initial": 335
+    },
+    "SGD+Nesterov": {
+      "best_lr": 0.001,
+      "final_loss": 0.0025284312732588897,
+      "initial_loss": 24.199999999999996,
+      "steps_to_1e-6_of_initial": null
+    },
+    "Adam": {
+      "best_lr": 1.0,
+      "final_loss": 4.2093393139813405e-06,
+      "initial_loss": 24.199999999999996,
+      "steps_to_1e-6_of_initial": 445
+    },
+    "AdamW(wd=0.01)": {
+      "best_lr": 0.30000000000000004,
+      "final_loss": 0.021792665804973573,
+      "initial_loss": 24.199999999999996,
+      "steps_to_1e-6_of_initial": null
+    },
+    "Lion": {
+      "best_lr": 0.01,
+      "final_loss": 0.027101000000009895,
+      "initial_loss": 24.199999999999996,
+      "steps_to_1e-6_of_initial": 290
+    }
+  },
+  "schedules_on_quadratic": {
+    "constant": {
+      "final_loss": 7.176477393627257e-21,
+      "best_lr": 0.3
+    },
+    "cosine+warmup(10%)": {
+      "final_loss": 3.2202008951893454e-13,
+      "best_lr": 0.3
+    },
+    "WSD(2%/10%)": {
+      "final_loss": 3.412975868946322e-20,
+      "best_lr": 0.3
+    }
+  }
+}

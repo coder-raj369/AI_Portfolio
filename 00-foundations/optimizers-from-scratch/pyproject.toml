@@ -1,0 +1,26 @@
+[project]
+name = "nanoptim"
+version = "0.1.0"
+description = "SGD/Adam/AdamW/Lion and LR schedules from scratch, with decoupling proofs."
+requires-python = ">=3.12"
+license = { text = "MIT" }
+dependencies = ["numpy>=2.1"]
+
+[project.optional-dependencies]
+# The spirals benchmark drives the sibling autodiff engine.
+experiments = ["matplotlib>=3.9", "nanograd"]
+dev = ["pytest>=8.3", "ruff>=0.6"]
+
+[tool.uv.sources]
+nanograd = { path = "../micrograd-engine", editable = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nanoptim"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "../micrograd-engine/src"]
+testpaths = ["tests"]
