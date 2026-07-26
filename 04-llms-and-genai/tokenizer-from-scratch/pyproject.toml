@@ -1,0 +1,23 @@
+[project]
+name = "bpetok"
+version = "0.1.0"
+description = "Byte-level BPE tokenizer trained and applied from scratch."
+requires-python = ">=3.12"
+license = { text = "MIT" }
+dependencies = ["regex>=2024.9.11"]  # \p{L} classes; the stdlib `re` cannot do these
+
+[project.optional-dependencies]
+experiments = ["matplotlib>=3.9"]
+# tiktoken is only needed for the optional comparison test
+dev = ["pytest>=8.3", "ruff>=0.6", "tiktoken>=0.8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/bpetok"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "tests"]
+testpaths = ["tests"]
