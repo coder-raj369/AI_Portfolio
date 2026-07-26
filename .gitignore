@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# Experiment tracking / artifacts
+mlruns/
+wandb/
+checkpoints/
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+*.bin
+*.gguf
+
+# Data (downloaded at runtime, never committed)
+data/cache/
+data/raw/
+*.arrow
+
+# NOTE: experiments/results/ IS committed on purpose - metrics.json and plots
+# are the evidence behind every number in the READMEs.

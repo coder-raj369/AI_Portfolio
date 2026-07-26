@@ -1,0 +1,52 @@
+# Repo-wide DEV environment + tooling config.
+# Each project under NN-*/ also has its own pyproject.toml so it can be
+# installed and run standalone; this root file exists so that `ruff` and
+# `pytest` can be driven once across the whole repo (which is what CI does).
+[project]
+name = "ai-portfolio"
+version = "0.1.0"
+description = "Portfolio of ML/DL/RL/LLM engineering work, built from scratch where it counts."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "numpy>=2.1",
+    "matplotlib>=3.9",
+    "pytest>=8.3",
+    "ruff>=0.6",
+    "regex>=2024.9.11",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["*/experiments/results"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "NPY", "RUF"]
+ignore = [
+    "E741",  # ambiguous names: `l` is genuinely the clearest name for a loss/logit in math code
+    "B905",  # zip(strict=) noise in short, obviously-equal-length loops
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/*" = ["E501"]
+
+[tool.pytest.ini_options]
+# Every project keeps a src/ layout. Listing the paths here lets the whole
+# suite run with a single `pytest` from the repo root (see Makefile / CI).
+pythonpath = [
+    "00-foundations/micrograd-engine/src",
+    "00-foundations/optimizers-from-scratch/src",
+    "00-foundations/nn-primitives/src",
+    "04-llms-and-genai/tokenizer-from-scratch/src",
+]
+testpaths = [
+    "00-foundations",
+    "04-llms-and-genai",
+]
+addopts = "-q --strict-markers"
+markers = ["slow: takes more than ~5s"]
