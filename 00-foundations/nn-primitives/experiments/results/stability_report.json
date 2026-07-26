@@ -1,0 +1,85 @@
+{
+  "dtype_limits": {
+    "float16": {
+      "exp_overflow_at": 11.09,
+      "naive_softmax_first_nan_at_logit": 12.0,
+      "stable_softmax_finite_past_failure": true
+    },
+    "float32": {
+      "exp_overflow_at": 88.723,
+      "naive_softmax_first_nan_at_logit": 89.0,
+      "stable_softmax_finite_past_failure": true
+    },
+    "float64": {
+      "exp_overflow_at": 709.783,
+      "naive_softmax_first_nan_at_logit": 710.0,
+      "stable_softmax_finite_past_failure": true
+    }
+  },
+  "log_softmax_error_curve": {
+    "logit_magnitude": [
+      0,
+      10,
+      20,
+      40,
+      60,
+      80,
+      85,
+      88,
+      90,
+      100,
+      200,
+      500
+    ],
+    "naive_error": [
+      7.798502998923595e-08,
+      7.798502998923595e-08,
+      7.798502998923595e-08,
+      7.798502998923595e-08,
+      7.798502998923595e-08,
+      1.6043354933437115e-07,
+      1.6043354933437115e-07,
+      1.6043354933437115e-07,
+      1000000000.0,
+      1000000000.0,
+      1000000000.0,
+      1000000000.0
+    ],
+    "stable_error": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "gradient_check_max_abs_error": {
+    "layer_norm_dx": 8.37001579157004e-10,
+    "layer_norm_dgamma": 6.9561556514941e-10,
+    "layer_norm_dbeta": 4.730664748819891e-10,
+    "rms_norm_dx": 5.272927927624238e-10,
+    "rms_norm_dgamma": 6.434364152596572e-10,
+    "softmax_vjp": 2.2945745303815102e-10
+  },
+  "norm_forward_ms_on_32x512x1024": {
+    "layer_norm": 267.28,
+    "rms_norm": 150.77,
+    "rms_speedup": 1.773
+  },
+  "attention_scale_effect": {
+    "d_head": 64,
+    "seq_len": 32,
+    "uniform_entropy_nats": 3.466,
+    "entropy_with_scale": 2.982,
+    "entropy_without_scale": 0.542,
+    "max_weight_without_scale": 0.99996
+  },
+  "gelu_tanh_approximation_max_abs_error": 0.0004732346287421585
+}
