@@ -1,0 +1,180 @@
+{
+  "environment": "NumPy float64, CPU only - no GPU or downloads required",
+  "rope": {
+    "relative_position_logits": [
+      -10.551758263090978,
+      -10.551758263090981,
+      -10.551758263090985,
+      -10.551758263090964,
+      -10.551758263090964
+    ],
+    "max_deviation_across_absolute_positions": 2.1316282072803006e-14,
+    "max_relative_deviation": 2.0201639898598977e-15,
+    "norm_preservation_max_abs_error": 1.7763568394002505e-15
+  },
+  "kv_cache_equivalence": {
+    "MHA (n_kv=8)": {
+      "token_by_token_max_abs_error": 2.4424906541753444e-15,
+      "prefill_then_decode_max_abs_error": 7.771561172376096e-16
+    },
+    "GQA (n_kv=2)": {
+      "token_by_token_max_abs_error": 1.7763568394002505e-15,
+      "prefill_then_decode_max_abs_error": 9.43689570931383e-16
+    },
+    "MQA (n_kv=1)": {
+      "token_by_token_max_abs_error": 1.3322676295501878e-15,
+      "prefill_then_decode_max_abs_error": 8.881784197001252e-16
+    }
+  },
+  "kv_cache_memory": {
+    "model_shape": "32 layers, 32 heads, head_dim 128, fp16, batch 1",
+    "rows": [
+      {
+        "config": "MHA (n_kv=32)",
+        "n_kv_heads": 32,
+        "bytes_per_token_all_layers": 524288,
+        "gib_at_4k_context": 2.0,
+        "gib_at_32k_context": 16.0,
+        "gib_at_128k_context": 64.0,
+        "reduction_vs_mha": 1.0
+      },
+      {
+        "config": "GQA (n_kv=8)",
+        "n_kv_heads": 8,
+        "bytes_per_token_all_layers": 131072,
+        "gib_at_4k_context": 0.5,
+        "gib_at_32k_context": 4.0,
+        "gib_at_128k_context": 16.0,
+        "reduction_vs_mha": 4.0
+      },
+      {
+        "config": "MQA (n_kv=1)",
+        "n_kv_heads": 1,
+        "bytes_per_token_all_layers": 16384,
+        "gib_at_4k_context": 0.062,
+        "gib_at_32k_context": 0.5,
+        "gib_at_128k_context": 2.0,
+        "reduction_vs_mha": 32.0
+      }
+    ]
+  },
+  "ssm_vs_attention_decode_state": {
+    "note": "GQA-8 attention vs a d_inner=8192, d_state=16 SSM, 32 layers",
+    "rows": [
+      {
+        "sequence_length": 1024,
+        "attention_kv_cache_mib": 128.0,
+        "ssm_state_mib": 16.0,
+        "ratio": 8.0
+      },
+      {
+        "sequence_length": 8192,
+        "attention_kv_cache_mib": 1024.0,
+        "ssm_state_mib": 16.0,
+        "ratio": 64.0
+      },
+      {
+        "sequence_length": 32768,
+        "attention_kv_cache_mib": 4096.0,
+        "ssm_state_mib": 16.0,
+        "ratio": 256.0
+      },
+      {
+        "sequence_length": 131072,
+        "attention_kv_cache_mib": 16384.0,
+        "ssm_state_mib": 16.0,
+        "ratio": 1024.0
+      }
+    ]
+  },
+  "moe_routing": {
+    "loss_at_perfectly_uniform_routing": 1.0,
+    "loss_at_total_collapse": 8.0,
+    "n_experts": 8,
+    "imbalance_curve": [
+      {
+        "fraction_to_one_expert": 0.0,
+        "load_balancing_loss": 1.0
+      },
+      {
+        "fraction_to_one_expert": 0.25,
+        "load_balancing_loss": 1.4375
+      },
+      {
+        "fraction_to_one_expert": 0.5,
+        "load_balancing_loss": 2.75
+      },
+      {
+        "fraction_to_one_expert": 0.75,
+        "load_balancing_loss": 4.9375
+      },
+      {
+        "fraction_to_one_expert": 0.9,
+        "load_balancing_loss": 6.6644
+      },
+      {
+        "fraction_to_one_expert": 1.0,
+        "load_balancing_loss": 8.0
+      }
+    ],
+    "at_initialisation": {
+      "n_experts": 8,
+      "dead_experts": 0,
+      "max_load_fraction": 0.1411,
+      "min_load_fraction": 0.1074,
+      "load_entropy_nats": 2.0757,
+      "uniform_entropy_nats": 2.0794,
+      "imbalance_ratio": 1.1289,
+      "load_balancing_loss": 1.005,
+      "router_z_loss": 6.3495,
+      "tokens_dropped": 0,
+      "capacity_per_expert": -1,
+      "total_expert_params": 196608,
+      "active_expert_params_per_token": 49152
+    },
+    "with_capacity_factor_0.25": {
+      "tokens_dropped": 1536,
+      "tokens_total": 2048,
+      "dropped_fraction": 0.75,
+      "capacity_per_expert": 64
+    }
+  },
+  "ssm_scan": {
+    "shape": {
+      "batch": 2,
+      "seq": 64,
+      "d_inner": 8,
+      "d_state": 16
+    },
+    "sequential_ms": 0.96,
+    "per_chunk_size": {
+      "1": {
+        "max_abs_error_vs_sequential": 0.0,
+        "ms": 2.8
+      },
+      "4": {
+        "max_abs_error_vs_sequential": 7.105427357601002e-15,
+        "ms": 1.32
+      },
+      "16": {
+        "max_abs_error_vs_sequential": 7.105427357601002e-15,
+        "ms": 3.41
+      },
+      "32": {
+        "max_abs_error_vs_sequential": 2.220446049250313e-14,
+        "ms": 9.29
+      },
+      "128": {
+        "max_abs_error_vs_sequential": 8.526512829121202e-14,
+        "ms": 15.72
+      }
+    },
+    "full_block_max_abs_error": 2.1316282072803006e-14,
+    "stability": {
+      "seq_len": 200,
+      "negative_A_max_abs_output": 39.806,
+      "negative_A_all_finite": true,
+      "positive_A_all_finite": false
+    }
+  }
+}
