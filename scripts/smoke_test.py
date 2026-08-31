@@ -14,6 +14,8 @@ import sys
 import traceback
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 
 # Each project keeps a src/ layout; add them all so this script works from a bare
@@ -118,6 +120,17 @@ def _bpetok() -> str:
     ratio = tok.compression_ratio(corpus)
     assert ratio > 2.0, ratio
     return f"vocab={tok.vocab_size}, lossless roundtrip, {ratio:.2f} bytes/token"
+
+
+@check("04-llms-and-genai/evaluation-harness")
+def _evalharness() -> str:
+    from evalharness.pass_at_k import pass_at_k
+    from evalharness.verifiers import exact_match, numeric_match
+
+    assert pass_at_k(200, 3, 1) == pytest.approx(0.015, abs=1e-6)
+    assert exact_match("42", "42")
+    assert numeric_match("The answer is 42.", "42")
+    return "pass@k + exact/numeric match smoke pass"
 
 
 def main() -> int:

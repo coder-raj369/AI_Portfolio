@@ -43,10 +43,12 @@ pythonpath = [
     "00-foundations/optimizers-from-scratch/src",
     "00-foundations/nn-primitives/src",
     "04-llms-and-genai/tokenizer-from-scratch/src",
+    "04-llms-and-genai/tokenizer-from-scratch/tests",
+    "04-llms-and-genai/evaluation-harness/src",
 ]
 testpaths = [
     "00-foundations",
     "04-llms-and-genai",
 ]
-addopts = "-q --strict-markers"
+addopts = "-q --strict-markers --import-mode=importlib"
 markers = ["slow: takes more than ~5s"]

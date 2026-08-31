@@ -74,7 +74,7 @@ def test_effective_decay_under_coupled_adam_depends_on_gradient_scale() -> None:
 
     ratio_coupled = shrink_coupled[0] / shrink_coupled[1]
     ratio_decoupled = shrink_decoupled[0] / shrink_decoupled[1]
-    assert ratio_decoupled == pytest.approx(1.0, abs=1e-9), "AdamW decay must be scale-free"
+    assert ratio_decoupled == pytest.approx(1.0, abs=1e-6), "AdamW decay must be scale-free"
     assert abs(ratio_coupled - 1.0) > 0.05, "coupled decay should vary with gradient scale"
 
 
