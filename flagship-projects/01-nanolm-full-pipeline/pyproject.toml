@@ -1,0 +1,27 @@
+[project]
+name = "nanolm-full-pipeline"
+version = "0.1.0"
+description = "Small decoder-only LLM pipeline: tokenizer -> pretraining -> SFT -> DPO evaluation."
+requires-python = ">=3.12"
+license = { text = "MIT" }
+dependencies = [
+    "numpy>=2.1",
+    "torch>=2.5.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nanolm"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

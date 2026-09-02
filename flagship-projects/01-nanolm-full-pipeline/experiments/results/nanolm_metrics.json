@@ -1,0 +1,12 @@
+{
+  "base_final_loss": 0.003628605743870139,
+  "base_mean_loss": 0.4365836436571103,
+  "sft_final_loss": 0.7241000533103943,
+  "sft_mean_loss": 3.0376144011815387,
+  "dpo_final_loss": 0.05774950236082077,
+  "dpo_mean_loss": 0.31084607491890587,
+  "sft_accuracy": {
+    "accuracy": 0.0
+  },
+  "tokenizer_vocab_size": 416
+}

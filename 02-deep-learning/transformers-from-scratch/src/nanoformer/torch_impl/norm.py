@@ -22,6 +22,8 @@ class RMSNorm(nn.Module):
 
     def forward(self, x: Tensor) -> Tensor:
         dtype = x.dtype
-        x32 = x.float()
-        normed = x32 * torch.rsqrt(x32.pow(2).mean(-1, keepdim=True) + self.eps)
-        return (self.weight.float() * normed).to(dtype)
+        compute_dtype = torch.float32 if dtype in (torch.float16, torch.bfloat16) else dtype
+        x_norm = x.to(compute_dtype)
+        weight = self.weight.to(compute_dtype)
+        normed = x_norm * torch.rsqrt(x_norm.pow(2).mean(-1, keepdim=True) + self.eps)
+        return (weight * normed).to(dtype)

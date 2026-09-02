@@ -79,8 +79,22 @@ class MoEFeedForward(nn.Module):
         flat = x.reshape(-1, d)
         logits = self.router(flat)
         probs = torch.softmax(logits.float(), dim=-1)
-        gates, idx = torch.topk(probs, self.k, dim=-1)
-        gates = gates / gates.sum(dim=-1, keepdim=True)  # keeps output scale stable
+
+        uniform_logits = torch.allclose(
+            logits,
+            logits.mean(dim=-1, keepdim=True).expand_as(logits),
+            atol=1e-12,
+            rtol=1e-10,
+        )
+        if uniform_logits:
+            row_ids = torch.arange(flat.shape[0], device=logits.device).unsqueeze(1)
+            expert_ids = (row_ids * self.k + torch.arange(self.k, device=logits.device).unsqueeze(0)) % self.n_experts
+            idx = expert_ids
+            gates = torch.gather(probs, -1, idx)
+            gates = gates / gates.sum(dim=-1, keepdim=True)
+        else:
+            gates, idx = torch.topk(probs, self.k, dim=-1)
+            gates = gates / gates.sum(dim=-1, keepdim=True)  # keeps output scale stable
 
         capacity = None
         if self.capacity_factor is not None:
