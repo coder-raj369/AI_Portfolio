@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import random
 from dataclasses import dataclass
+from typing import Callable
 
 import torch
 from torch import Tensor, nn
@@ -155,6 +156,90 @@ def train_dpo(model: nn.Module, preference_pairs: list[tuple[list[int], list[int
             optimizer.zero_grad()
             loss = dpo_loss(model, ref_model, chosen_tensor, rejected_tensor)
             loss.backward()
+            optimizer.step()
+            losses.append(float(loss.item()))
+
+    return TrainingResult(
+        final_loss=float(losses[-1]),
+        mean_loss=float(sum(losses) / len(losses)),
+        checkpoints=losses,
+    )
+
+
+def _sample_completion(model: nn.Module, prompt: list[int], max_new_tokens: int, temperature: float) -> list[int]:
+    """Sample one completion while keeping the model inside its context window."""
+    device = next(model.parameters()).device
+    tokens = torch.tensor(prompt, dtype=torch.long, device=device).unsqueeze(0)
+    completion: list[int] = []
+    for _ in range(max_new_tokens):
+        logits = model(tokens[:, -model.max_seq_len :])[:, -1]
+        probabilities = torch.softmax(logits / temperature, dim=-1)
+        next_token = torch.multinomial(probabilities, num_samples=1)
+        completion.append(int(next_token.item()))
+        tokens = torch.cat([tokens, next_token], dim=1)
+    return completion
+
+
+def _completion_log_prob(model: nn.Module, prompt: list[int], completion: list[int]) -> Tensor:
+    """Return the summed log probability of completion tokens conditioned on prompt."""
+    device = next(model.parameters()).device
+    sequence = torch.tensor(prompt + completion, dtype=torch.long, device=device)
+    context = sequence[:-1]
+    if len(context) > model.max_seq_len:
+        context = context[-model.max_seq_len :]
+    logits = model(context.unsqueeze(0))[0, -len(completion) :]
+    targets = sequence[-len(completion) :]
+    return F.log_softmax(logits, dim=-1).gather(1, targets.unsqueeze(1)).sum()
+
+
+def grpo_loss(rewards: Tensor, completion_log_probs: Tensor, eps: float = 1e-8) -> Tensor:
+    """Compute a group-relative policy-gradient loss from one prompt's samples."""
+    if rewards.ndim != 1 or completion_log_probs.ndim != 1:
+        raise ValueError("GRPO inputs must be one-dimensional group tensors")
+    if rewards.shape != completion_log_probs.shape:
+        raise ValueError("rewards and completion_log_probs must have the same shape")
+    advantages = (rewards - rewards.mean()) / (rewards.std(unbiased=False) + eps)
+    return -(advantages.detach() * completion_log_probs).mean()
+
+
+def train_grpo(
+    model: nn.Module,
+    prompts: list[list[int]],
+    reward_fn: Callable[[list[int], list[int]], float],
+    *,
+    epochs: int = 10,
+    group_size: int = 4,
+    max_new_tokens: int = 4,
+    temperature: float = 1.0,
+    lr: float = 1e-3,
+) -> TrainingResult:
+    """Train with verifier rewards and group-relative policy optimization."""
+    if group_size < 2:
+        raise ValueError("group_size must be at least 2 for relative advantages")
+    if temperature <= 0:
+        raise ValueError("temperature must be positive")
+
+    optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
+    losses: list[float] = []
+    for _ in range(epochs):
+        random.shuffle(prompts)
+        for prompt in prompts:
+            completions = [
+                _sample_completion(model, prompt, max_new_tokens, temperature)
+                for _ in range(group_size)
+            ]
+            rewards = torch.tensor(
+                [reward_fn(prompt, completion) for completion in completions],
+                dtype=torch.float32,
+                device=next(model.parameters()).device,
+            )
+            log_probs = torch.stack([
+                _completion_log_prob(model, prompt, completion) for completion in completions
+            ])
+            optimizer.zero_grad()
+            loss = grpo_loss(rewards, log_probs)
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             optimizer.step()
             losses.append(float(loss.item()))
 

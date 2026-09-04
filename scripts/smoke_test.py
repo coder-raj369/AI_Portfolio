@@ -133,6 +133,30 @@ def _evalharness() -> str:
     return "pass@k + exact/numeric match smoke pass"
 
 
+@check("flagship-projects/01-nanolm-full-pipeline")
+def _nanolm() -> str:
+    import torch
+    from nanolm import TinyDecoderLM
+
+    model = TinyDecoderLM(vocab_size=32, d_model=16, n_layers=1, n_heads=4, max_seq_len=8, d_hidden=32)
+    logits = model(torch.zeros((1, 4), dtype=torch.long))
+    assert logits.shape == (1, 4, 32)
+    return "decoder forward shape and causal model import pass"
+
+
+@check("flagship-projects/02-codebase-copilot")
+def _codecopilot() -> str:
+    from codecopilot import CodebaseSearch, Document
+
+    search = CodebaseSearch([
+        Document("src/train.py", "Training loop", "optimizer and loss"),
+        Document("src/eval.py", "Evaluation", "verifier scoring"),
+    ])
+    results = search.search("training optimizer", top_k=1)
+    assert results[0]["path"] == "src/train.py"
+    return "BM25 retrieval + reranking smoke pass"
+
+
 def main() -> int:
     width = max(len(name) for name, _ in CHECKS)
     failures = 0

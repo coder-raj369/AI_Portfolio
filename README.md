@@ -12,10 +12,9 @@ committed alongside it.
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT" /></a>
 </p>
 
-> **Status: milestones M0–M1 complete and running.** 4 modules, 170 passing tests, 100% of
-> quoted numbers reproducible from committed logs. The remaining modules are planned in
-> [`PROGRESS.md`](PROGRESS.md) and are **not** in the tree yet — nothing here is a stub or a
-> placeholder. See [Roadmap](#roadmap).
+> **Status: M0–M1 complete; M3 flagships in active build.** The foundations, evaluation harness,
+> nanoLM pipeline, and codebase-copilot retrieval layer are in the tree and validated locally.
+> See [`PROGRESS.md`](PROGRESS.md) for the source-of-truth milestone state.
 
 ## If you only look at three things
 
@@ -46,8 +45,8 @@ implementation and are reported anyway:
 | [`04-llms-and-genai/tokenizer-from-scratch`](04-llms-and-genai/tokenizer-from-scratch) | Byte-level BPE trainer with an inverted pair index, GPT-4 regex pre-tokenization, special-token policies, JSON round-trip, vocab-size ablation | ✅ 49 tests + 2 optional |
 | `02-deep-learning/transformers-from-scratch` | MHA/RoPE/ALiBi/RMSNorm/GQA/KV-cache, Mixture-of-Experts, Mamba-style selective SSM + hybrid block | 🔜 M2 |
 | `04-llms-and-genai/evaluation-harness` | Shared eval infra: task registry, pass@k, verifier scoring, LLM-judge with rubric, regression gating | 🔜 M2 |
-| `flagship-projects/01-nanolm-full-pipeline` | tokenizer → pretrain → SFT → DPO → GRPO/RLVR with a base/SFT/DPO/GRPO comparison table | 🔜 M3 |
-| `flagship-projects/02-codebase-copilot` | Hybrid retrieval + re-ranker, MCP 2.1 agent, FastAPI + Docker, 60-question eval set | 🔜 M4 |
+| [`flagship-projects/01-nanolm-full-pipeline`](flagship-projects/01-nanolm-full-pipeline) | tokenizer → pretrain → SFT → DPO → GRPO/RLVR with a base/SFT/DPO/GRPO comparison table | 🚧 M3 in progress |
+| [`flagship-projects/02-codebase-copilot`](flagship-projects/02-codebase-copilot) | BM25 retrieval + symbolic reranker foundation for the future MCP agent | 🚧 M4 foundation |
 | `flagship-projects/03-efficient-inference-server` | KV-cache → continuous batching → INT4/AWQ → vLLM/SGLang, latency/throughput/cost | 🔜 M5 |
 | `06-research-reproductions` | DPO at small scale + an ablation the paper didn't run; DDPM→DDIM sampler | 🔜 M5 |
 | `01`, `02`, `03`, `05`, `07`, `08` | Classical ML, CNNs/ViT/generative/CLIP, RL (tabular→PPO→RLHF), MLOps, 5 system-design docs, GNNs + time series | 🔜 M6 |
@@ -58,8 +57,8 @@ Full plan, per-module descriptions and build order: [`PROGRESS.md`](PROGRESS.md)
 
 1. **Fundamentals** — autodiff, optimisers, normalisation backward passes, attention and BPE
    written out and *verified*, not described.
-2. **Applied engineering** — pinned per-project environments, 170 tests, CI that lints and
-   tests on push, a smoke test that exercises every module in under 5 seconds.
+2. **Applied engineering** — pinned per-project environments, module tests, CI that lints and
+  tests on push, and a smoke test that exercises every shipped module.
 3. **Current relevance** — RMSNorm/SwiGLU/GQA, WSD schedules, GRPO/RLVR, MCP-wired agents,
    quantisation and continuous batching (M2–M5).
 4. **Research capability** — measured ablations, honest negative results, paper reproductions

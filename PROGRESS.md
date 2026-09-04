@@ -4,8 +4,9 @@ Live build state for `ai-portfolio`. A session with no memory of prior work shou
 read this file and resume without re-deriving the plan.
 
 **Current state:** M0 (scaffold) and M1 (foundations + tokenizer) are **complete, tested and
-documented**. 4 modules, **170 passing tests** (+3 skipped: optional torch/tiktoken), every
-README number reproduced from a committed log. Next milestone: **M2**.
+documented**. The M2 evaluation substrate is complete, and M3 nanoLM plus the M4 codebase
+copilot foundation are in active build. New flagship work remains uncommitted until explicitly
+requested.
 **Last updated:** 2026-07-26.
 
 ## Ground rules (do not drift from these)
@@ -51,9 +52,10 @@ README number reproduced from a committed log. Next milestone: **M2**.
       `04-llms-and-genai/evaluation-harness` (task registry, pass@k, verifier scoring,
       LLM-judge + human-agreement spot check, regression gating).
 - [ ] **M3 — Flagship 1: nanoLM full pipeline.** ~50 M-param decoder: pretrain on a
-      FineWeb-Edu slice → SFT → DPO → GRPO/RLVR with a programmatic verifier; base/SFT/DPO/GRPO
-      eval table incl. alignment tax; best-of-n + self-consistency at matched compute. Feeds
-      `03-reinforcement-learning/llm-alignment` and `reasoning-rl`.
+  FineWeb-Edu slice → SFT → DPO → GRPO/RLVR with a programmatic verifier; base/SFT/DPO/GRPO
+  eval table incl. alignment tax; best-of-n + self-consistency at matched compute. The
+  current CPU-safe implementation covers all four training stages on synthetic data.
+  Feeds `03-reinforcement-learning/llm-alignment` and `reasoning-rl`.
 - [ ] **M4 — Flagship 2: codebase copilot.** AST-aware chunking, dense+BM25 hybrid,
       cross-encoder rerank, MCP 2.1 server (`search`/`read_file`/`propose_patch`), planning
       agent with failure taxonomy, FastAPI + UI, Docker Compose, 60-question eval set +

@@ -4,7 +4,7 @@ import torch
 
 from nanolm.data import build_instruction_pairs, build_pretrain_corpus, build_preference_pairs, train_tokenizer
 from nanolm.model import TinyDecoderLM
-from nanolm.train import dpo_loss, evaluate_model, sft_finetune, train_base_model
+from nanolm.train import dpo_loss, evaluate_model, grpo_loss, sft_finetune, train_base_model, train_grpo
 
 
 def test_tokenizer_and_dataset_shape() -> None:
@@ -55,3 +55,27 @@ def test_evaluate_model_returns_score() -> None:
     pairs = [(tokenizer.encode("What is 2 + 2?", allowed_special="all"), tokenizer.encode("4.", allowed_special="all"))]
     metrics = evaluate_model(model, pairs)
     assert "accuracy" in metrics
+
+
+def test_grpo_loss_normalizes_group_rewards() -> None:
+    rewards = torch.tensor([0.0, 1.0, 2.0])
+    log_probs = torch.tensor([-1.0, -1.0, -1.0], requires_grad=True)
+    loss = grpo_loss(rewards, log_probs)
+    loss.backward()
+    assert torch.isfinite(loss)
+    assert torch.isfinite(log_probs.grad).all()
+
+
+def test_train_grpo_runs_with_programmatic_reward() -> None:
+    tokenizer = train_tokenizer(build_pretrain_corpus(), vocab_size=512)
+    model = TinyDecoderLM(vocab_size=tokenizer.vocab_size, d_model=16, n_layers=1, n_heads=4, max_seq_len=12, d_hidden=32)
+    prompt = tokenizer.encode("Answer:", allowed_special="all")[:4]
+    target = tokenizer.encode(" Paris.", allowed_special="all")[0]
+
+    def reward_fn(_prompt: list[int], completion: list[int]) -> float:
+        return float(completion[0] == target)
+
+    before = model.token_embedding.weight.detach().clone()
+    result = train_grpo(model, [prompt], reward_fn, epochs=2, group_size=3, max_new_tokens=2, lr=1e-3)
+    assert torch.isfinite(torch.tensor(result.final_loss))
+    assert not torch.equal(before, model.token_embedding.weight.detach())
