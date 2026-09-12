@@ -2,7 +2,7 @@
 
 from codecopilot.ast_chunker import CodeChunk, chunk_python_source
 from codecopilot.ranker import Reranker
-from codecopilot.retriever import BM25Retriever, tokenize
+from codecopilot.retriever import BM25Retriever, HybridRetriever, tokenize
 from codecopilot.search import CodebaseSearch, Document
 from codecopilot.tools import CodebaseTools, PatchProposal
 
@@ -12,6 +12,7 @@ __all__ = [
     "CodebaseSearch",
     "CodebaseTools",
     "Document",
+    "HybridRetriever",
     "PatchProposal",
     "Reranker",
     "chunk_python_source",

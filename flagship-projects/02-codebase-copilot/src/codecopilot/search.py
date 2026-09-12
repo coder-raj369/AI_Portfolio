@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from codecopilot.ast_chunker import chunk_python_source
 from codecopilot.ranker import Reranker
-from codecopilot.retriever import BM25Retriever
+from codecopilot.retriever import HybridRetriever
 
 
 @dataclass
@@ -31,7 +31,7 @@ class CodebaseSearch:
 
     def __init__(self, documents: list[Document]) -> None:
         self.documents = documents
-        self.retriever = BM25Retriever()
+        self.retriever = HybridRetriever()
         self.reranker = Reranker()
 
     def search(self, query: str, *, top_k: int = 5) -> list[dict[str, object]]:

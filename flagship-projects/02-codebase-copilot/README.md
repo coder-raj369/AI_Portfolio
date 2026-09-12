@@ -8,7 +8,7 @@ This flagship project packages a compact codebase-search stack that mirrors the 
 
 Real code search is not just a vector database; it is a retrieval system with a strong lexical baseline and a reranker that understands file names, symbols, and task wording. This module demonstrates:
 
-- lexical BM25-style retrieval over a synthetic code corpus
+- hybrid BM25 plus deterministic dense-style hashed feature retrieval
 - Python AST-aware chunks with qualified symbols and source spans
 - title/path overlap bonuses for likely file matches
 - reranking of candidate results before returning them
@@ -19,7 +19,7 @@ Real code search is not just a vector database; it is a retrieval system with a 
 
 ```mermaid
 flowchart TD
-    Q[User query] --> R[BM25 lexical matcher]
+    Q[User query] --> R[Hybrid BM25 + dense matcher]
     R --> C[Candidate files]
     C --> A[AST symbols and source spans]
     A --> K[Symbol & title reranker]
@@ -51,7 +51,7 @@ A typical query such as "how do we train the tokenizer and score validation" wil
 
 ## Current status
 
-This is a compact retrieval-and-reranking system that is intentionally small, CPU-safe, and easy to reason about. Python documents can be indexed with `Document.from_python_source`, which extracts class/function symbols and preserves their source spans for later read-and-patch tools. It is designed to become the basis for a much richer repo-agent stack in later milestones while still giving a clear, readable demo now.
+This is a compact retrieval-and-reranking system that is intentionally small, CPU-safe, and easy to reason about. The retriever fuses normalized BM25 relevance with deterministic hashed token and character features, so it remains reproducible without network access or embedding-model downloads. Python documents can be indexed with `Document.from_python_source`, which extracts class/function symbols and preserves their source spans for later read-and-patch tools. It is designed to become the basis for a much richer repo-agent stack in later milestones while still giving a clear, readable demo now.
 
 `CodebaseTools` keeps repository operations deliberately conservative: reads are bounded and
 root-scoped, and patch proposals require exactly one matching replacement and return a unified
@@ -62,5 +62,5 @@ wrap later.
 
 - Intended use: codebase search, repo-navigation demo, and retrieval-system portfolio piece.
 - Training data: synthetic repo-like docs generated in the demo script and tests.
-- Limitations: no embeddings, no cross-encoder, no real multi-repo memory, and AST extraction currently targets Python; the object is to show ranking quality and system design rather than production scale.
+- Limitations: hashed features are not a semantic embedding model, there is no cross-encoder or real multi-repo memory, and AST extraction currently targets Python; the object is to show ranking quality and system design rather than production scale.
 - License: MIT (repo root).

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from codecopilot.ast_chunker import chunk_python_source
 from codecopilot.ranker import Reranker
-from codecopilot.retriever import BM25Retriever
+from codecopilot.retriever import BM25Retriever, HybridRetriever
 from codecopilot.search import CodebaseSearch, Document
 from codecopilot.tools import CodebaseTools
 
@@ -15,6 +15,20 @@ def test_bm25_retriever_prioritizes_query_terms() -> None:
     ]
     ranked = BM25Retriever().search("tokenizer train merge vocabulary", docs, top_k=2)
     assert ranked[0][0] == docs[0]
+
+
+def test_hybrid_retriever_is_deterministic_and_ranks_lexical_match() -> None:
+    docs = [
+        "tokenizer merge operations and byte vocabulary",
+        "web server health checks and request routing",
+        "optimizer training loop and loss tracking",
+    ]
+    retriever = HybridRetriever()
+    first = retriever.search("tokenizer merge vocabulary", docs, top_k=3)
+    second = retriever.search("tokenizer merge vocabulary", docs, top_k=3)
+    assert first == second
+    assert first[0][0] == docs[0]
+    assert all(score >= 0.0 for _, score in first)
 
 
 def test_reranker_keeps_best_matches_first() -> None:
