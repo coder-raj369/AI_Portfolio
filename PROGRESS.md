@@ -56,8 +56,10 @@ requested.
   eval table incl. alignment tax; best-of-n + self-consistency at matched compute. The
   current CPU-safe implementation covers all four training stages on synthetic data.
   Feeds `03-reinforcement-learning/llm-alignment` and `reasoning-rl`.
-- [ ] **M4 — Flagship 2: codebase copilot.** AST-aware chunking, dense+BM25 hybrid,
-      cross-encoder rerank, MCP 2.1 server (`search`/`read_file`/`propose_patch`), planning
+- [ ] **M4 — Flagship 2: codebase copilot.** AST-aware chunking and safe repository tools
+  (`search`/`read_file`/`propose_patch`) are now implemented with qualified Python symbols
+  and source spans; remaining work is dense+BM25 hybrid, cross-encoder rerank, MCP 2.1
+  transport, planning
       agent with failure taxonomy, FastAPI + UI, Docker Compose, 60-question eval set +
       ablation grid. Feeds `rag-pipeline` and `llm-agents`.
 - [ ] **M5 — Flagship 3 + paper reproductions.** `efficient-inference-server` (naive → KV cache
